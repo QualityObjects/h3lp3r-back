@@ -42,6 +42,8 @@ public class RandomGeneratorService {
 	public static final String TOTAL_INPUT_KEY = "total";
 	public static final String GENDER_INPUT_KEY = "gender";
 	public static final String LANG_INPUT_KEY = "lang";
+	public static final Integer MAX_TOTAL_NAMES = 100;
+	
 	
 	public OpResponse randomNumber(OpInput input) throws QOException {
 		OpResponse resp = new OpResponse();
@@ -77,6 +79,9 @@ public class RandomGeneratorService {
 		resp.setInput(input);
 		List<RandomName> result = new ArrayList<>();
 		int total = Integer.valueOf( input.getParams().getOrDefault(TOTAL_INPUT_KEY, "1"));
+		if (total > MAX_TOTAL_NAMES) {
+			total = MAX_TOTAL_NAMES;
+		}
 		Set<Integer> included = new HashSet<>();
 		List<FirstName> firstNames = this.findFirstNames(input.getParams().get(GENDER_INPUT_KEY));
 		List<LastName> lastNames = this.findLastNames(input.getParams().get(GENDER_INPUT_KEY));
