@@ -1,0 +1,48 @@
+version: '3'
+services:
+  h3lp3r-db:
+    container_name: h3lp3r-db
+    image: postgres:11
+    restart: unless-stopped
+    volumes:
+      - "/opt/volumes/h3lp3r-db:/var/lib/postgresql/data" 
+    ports:
+      - 127.0.0.1:5432:5432
+    healthcheck:
+      test: ["CMD", "/usr/bin/pg_isready"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+  h3lp3r-front:
+    container_name: h3lp3r-front
+    image: docker-registry.qodev.es/h3lp3r/h3lp3r-front:latest
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:1080:80
+    healthcheck:
+      test: ["CMD-SHELL", "ps -ef | grep nginx | grep master"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+  h3lp3r-server:
+    container_name: h3lp3r-server
+    image: docker-registry.qodev.es/h3lp3r/h3lp3r-back:latest
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      DB_HOST: h3lp3r-db
+      DB_NAME: h3lp3r
+      DB_USER: h3lp3r
+      DB_PASSWORD: h3lp3r
+    ports:
+      - 127.0.0.1:8080:8080
+    depends_on:
+      - h3lp3r-db
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "localhost:8080/actuator"]
+      interval: 2m
+      timeout: 5s
+      retries: 3
+
+
+    
