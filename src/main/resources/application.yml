@@ -1,0 +1,49 @@
+management:
+  health:
+    ldap:
+      enabled: false
+    db:
+      enabled: true
+    mail:
+      enabled: false
+    defaults:
+      enabled: true
+  endpoint:
+    health:
+      show-details: ALWAYS
+      enabled: true
+
+spring:
+  application:
+    name: H3lp3r
+  liquibase:
+    enabled: true
+    change-log: classpath:db/liquibase-changelog.xml
+  jackson:    
+    time-zone: Europe/Madrid      
+    serialization:
+      indent-output: true
+      fail-on-empty-beans: false
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust-dates-to-context-time-zone: true
+  datasource:
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
+    username: ${db-user:h3lp3r}
+    password: ${db-password:h3lp3r}
+    jdbc-url: jdbc:postgresql://${db-host:localhost}:${db-port:5432}/${db-name:h3lp3r}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    open-in-view: false
+
+server:
+  port: ${server-port:8080}
+  error:
+    whitelabel:
+      enabled: false 
+  
+services:
+  url:
+    prefix: /api
+      

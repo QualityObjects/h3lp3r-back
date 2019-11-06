@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+      <property name="now" value="now()" dbms="postgresql"/>
+	  <property name="now" value="now()" dbms="hsqldb"/>
+		 
+		 
+     <changeSet author="rsanchez" id="load_names">
+		<preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from first_names</sqlCheck>
+        </preConditions>
+      	<loadData tableName="first_names" file="db/data/first_names.csv" separator=";">
+	        <column header="FIRST_NAME" name="first_name" />
+	        <column header="GENDER" name="gender" />
+	        <column header="LANG" name="lang" />
+	    </loadData>
+      	<loadData tableName="last_names" file="db/data/last_names.csv" separator=";">
+	        <column header="LAST_NAME" name="last_name" />
+	        <column header="LANG" name="lang" />
+	    </loadData>
+    		
+	</changeSet>
+	
+
+</databaseChangeLog>

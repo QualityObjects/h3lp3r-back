@@ -1,0 +1,66 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+<property name="json.type" value="clob" dbms="hsqldb"/>
+<property name="json.type" value="json" dbms="postgresql"/>
+<property name="autoincrement.type" value="SERIAL" dbms="postgresql"/>
+<property name="autoincrement.type" value="IDENTITY" dbms="hsqldb"/>
+
+    <changeSet author="dev_team" id="0">
+        <createTable tableName="first_names">
+            <column name="id" type="${autoincrement.type}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="gender" type="char(1)" >
+                <constraints nullable="true"/>
+            </column>
+            <column name="lang" type="varchar(3)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="last_names" >
+            <column name="id" type="${autoincrement.type}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="lang" type="varchar(3)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="operation_log">
+            <column name="id" type="${autoincrement.type}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_ip" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation_timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_agent" type="varchar(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operation_data" type="varchar(1500)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,0 +1,17 @@
+{
+  "groups": [],
+  "properties": [
+    {
+      "name": "services.url.prefix",
+      "type": "java.lang.String",
+      "description": "Prefijo de la URL para todos los servicios (no los recursos), ej: /api",
+      "defaultValue": "/api"
+    },
+    {
+        "name": "spring.datasource.jdbc-url",
+        "type": "java.lang.String",
+        "description": "Driver URL JDBC",
+        "defaultValue": ""
+    }
+]
+}
