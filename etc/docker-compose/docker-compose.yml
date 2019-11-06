@@ -15,7 +15,7 @@ services:
       retries: 5
   h3lp3r-front:
     container_name: h3lp3r-front
-    image: docker-registry.qodev.es/h3lp3r/h3lp3r-front:latest
+    image: qualityoobjects/h3lp3r-front:latest
     restart: unless-stopped
     ports:
       - 127.0.0.1:1080:80
@@ -26,7 +26,7 @@ services:
       retries: 5
   h3lp3r-server:
     container_name: h3lp3r-server
-    image: docker-registry.qodev.es/h3lp3r/h3lp3r-back:latest
+    image: qualityoobjects/h3lp3r-back:latest
     restart: unless-stopped
     environment:
       PORT: 8080
