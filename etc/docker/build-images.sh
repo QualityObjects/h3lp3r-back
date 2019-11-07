@@ -4,6 +4,7 @@ export TARGET=develop
 export WORKSPACE=$(pwd)
 
 if [ "$BUILD_FRONT" = "true" ]; then
+  rm -rf h3lp3r-front 2> /dev/null
   echo Construimos front...
   git clone https://gitlab.com/qo-oss/h3lp3r/h3lp3r-front.git
   cd h3lp3r-front
@@ -17,6 +18,7 @@ fi
 
 
 if [ "$BUILD_BACK" = "true" ]; then
+  rm -rf h3lp3r-back 2> /dev/null
   echo Construimos back...
   cd "$WORKSPACE"
   git clone https://gitlab.com/qo-oss/h3lp3r/h3lp3r-back.git
