@@ -15,7 +15,7 @@ services:
       retries: 5
   h3lp3r-front:
     container_name: h3lp3r-front
-    image: qualityoobjects/h3lp3r-front:latest
+    image: qualityobjects/h3lp3r-front:latest
     restart: unless-stopped
     ports:
       - 127.0.0.1:1080:80
@@ -26,7 +26,7 @@ services:
       retries: 5
   h3lp3r-back:
     container_name: h3lp3r-back
-    image: qualityoobjects/h3lp3r-back:latest
+    image: qualityobjects/h3lp3r-back:latest
     restart: unless-stopped
     environment:
       PORT: 8080
