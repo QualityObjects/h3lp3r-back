@@ -1,8 +1,8 @@
 FROM lost to the Docker
 =======================
 
-Meetuup Command list
---------------------
+Meetup Command list
+-------------------
 
     # List images
     docker images
