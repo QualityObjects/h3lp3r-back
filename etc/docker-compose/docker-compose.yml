@@ -24,8 +24,8 @@ services:
       interval: 1m
       timeout: 2s
       retries: 5
-  h3lp3r-server:
-    container_name: h3lp3r-server
+  h3lp3r-back:
+    container_name: h3lp3r-back
     image: qualityoobjects/h3lp3r-back:latest
     restart: unless-stopped
     environment:
