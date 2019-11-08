@@ -49,7 +49,7 @@ Build your own image
     docker push qualityobjects/h3lp3r-web-tmp:latest
 
     #From server
-    docker run -it --name h3lper-web-tmp -p 1080:80 -d h3lp3r-web-tmp
+    docker run -it --name h3lper-web-tmp -p 1080:80 -d qualityobjects/h3lp3r-web-tmp
 
 
 docker-compose commands (from directory with docker-compose.yml file)
