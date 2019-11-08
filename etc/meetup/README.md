@@ -31,7 +31,7 @@ Meetup Command list
 
     # From psql command
     create database qo;
-    create user qo with password qo;
+    create user qo with password 'qo';
     grant all on database qo to qo;
 
     docker volume create portainer_data
