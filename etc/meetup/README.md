@@ -7,14 +7,14 @@ Meetup Command list
     # List images
     docker images
 
-    # Get image from repo
+    # Get image from remote repo
     docker pull mysql:5.7
 
-    # Get image from repo
+    # Remove image from local repo
     docker rmi mysql:5.7
 
     #Hello word with contianers
-    docker run -it --rm hairyhenderson/figlet "QOnecta !!"
+    docker run -it --rm hairyhenderson/figlet "Welcome to QOnecta !!"
 
     # Example with DataBase
     docker volume create mysql_project1_data_vol
@@ -42,14 +42,16 @@ Meetup Command list
 
 Build your own image
 
+    # Go to dir: etc/meetup/web-image
     docker build -t h3lp3r-web-tmp -t qualityobjects/h3lp3r-web-tmp --rm -f ./Dockerfile .
     #For testing
     docker run -it --rm -p 1080:80 h3lp3r-web-tmp
 
+    #Publish to remote repo
     docker push qualityobjects/h3lp3r-web-tmp:latest
 
     #From server
-    docker run -it --name h3lper-web-tmp -p 1080:80 -d qualityobjects/h3lp3r-web-tmp
+    docker run --name h3lper-web-tmp -p 1080:80 -d qualityobjects/h3lp3r-web-tmp
 
 
 docker-compose commands (from directory with docker-compose.yml file)
