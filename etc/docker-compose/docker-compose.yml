@@ -2,12 +2,10 @@ version: '3'
 services:
   h3lp3r-db:
     container_name: h3lp3r-db
-    image: postgres:11
+    image: postgres:12
     restart: unless-stopped
     volumes:
       - "/opt/volumes/h3lp3r-db:/var/lib/postgresql/data" 
-    ports:
-      - 127.0.0.1:5432:5432
     healthcheck:
       test: ["CMD", "/usr/bin/pg_isready"]
       interval: 1m
@@ -34,8 +32,6 @@ services:
       DB_NAME: h3lp3r
       DB_USER: h3lp3r
       DB_PASSWORD: h3lp3r
-    ports:
-      - 127.0.0.1:8080:8080
     depends_on:
       - h3lp3r-db
     healthcheck:

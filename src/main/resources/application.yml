@@ -32,10 +32,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${db-user:h3lp3r}
     password: ${db-password:h3lp3r}
-    jdbc-url: jdbc:postgresql://${db-host:localhost}:${db-port:5432}/${db-name:h3lp3r}
+    url: jdbc:postgresql://${db-host:localhost}:${db-port:5432}/${db-name:h3lp3r}    
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-    open-in-view: false
 
 server:
   port: ${server-port:8080}

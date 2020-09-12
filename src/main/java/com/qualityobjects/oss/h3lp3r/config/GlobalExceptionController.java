@@ -1,9 +1,9 @@
-package com.qualityobjects.oss.h3lp3r;
+package com.qualityobjects.oss.h3lp3r.config;
 
 import java.nio.file.AccessDeniedException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,7 +19,7 @@ import com.qualityobjects.oss.h3lp3r.exception.QORuntimeException;
 @ControllerAdvice
 public class GlobalExceptionController extends ResponseEntityExceptionHandler  {
 
-	private static final Logger LOG = LogManager.getLogger(GlobalExceptionController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionController.class);
 
 
 	@ResponseBody
@@ -49,7 +49,7 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler  {
 	@ResponseBody
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorBean> handleAllException(Exception ex) {
-		LOG.error(ex);
+		LOG.error("Unexpected error: {}", ex, ex);
 		int httpStatus = (ex instanceof HttpServerErrorException) ? HttpServerErrorException.class.cast(ex).getRawStatusCode() : HttpStatus.INTERNAL_SERVER_ERROR.value();   
 		ErrorBean error = new ErrorBean(httpStatus, ex.getMessage());
 

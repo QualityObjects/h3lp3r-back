@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
@@ -29,7 +29,7 @@ import com.qualityobjects.oss.h3lp3r.repository.LastNameRepository;
 public class RandomGeneratorService {
 
 	@SuppressWarnings("unused") 
-	private static final Logger LOG = LogManager.getLogger(RandomGeneratorService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RandomGeneratorService.class);
 
 	@Autowired
 	private FirstNameRepository firstNameRepository;

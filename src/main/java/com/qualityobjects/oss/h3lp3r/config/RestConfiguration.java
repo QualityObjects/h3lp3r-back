@@ -1,25 +1,22 @@
-package com.qualityobjects.oss.h3lp3r;
+package com.qualityobjects.oss.h3lp3r.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.ComponentScan;
+import com.qualityobjects.oss.h3lp3r.domain.enums.Operation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.qualityobjects.oss.h3lp3r.domain.enums.Operation;
-
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.qualityobjects.oss.h3lp3r.controllers")
 public class RestConfiguration implements WebMvcConfigurer {
 
 	@SuppressWarnings("unused")
-	private static final Logger LOG = LogManager.getLogger(RestConfiguration.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RestConfiguration.class);
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {

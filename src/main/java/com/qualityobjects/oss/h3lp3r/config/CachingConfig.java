@@ -1,4 +1,4 @@
-package com.qualityobjects.oss.h3lp3r;
+package com.qualityobjects.oss.h3lp3r.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
