@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
 	"com.qualityobjects.oss.h3lp3r.config",
 	"com.qualityobjects.oss.h3lp3r.controller",
-	"com.qualityobjects.oss.h3lp3r.repository",
 	"com.qualityobjects.oss.h3lp3r.service",
+	"com.qualityobjects.oss.h3lp3r.aspect",
 })
 public class H3lperApplication {
 

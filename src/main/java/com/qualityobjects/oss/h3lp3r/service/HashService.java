@@ -22,6 +22,9 @@ public class HashService {
 	public static final String TEXT_INPUT_KEY = "text";
 	
 	public OpResponse hash(OpInput input) throws QOException {
+		if (true) {
+			throw new RuntimeException("Hola caracola");
+		}
 		OpResponse resp = new OpResponse();
 		resp.setInput(input);
 		

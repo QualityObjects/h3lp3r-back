@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebMvc
+@EnableWebMvc()
 public class RestConfiguration implements WebMvcConfigurer {
 
 	@SuppressWarnings("unused")
@@ -35,7 +35,5 @@ public class RestConfiguration implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(Operation.CONVERTER);
     }
-	
-	
 	
 }
