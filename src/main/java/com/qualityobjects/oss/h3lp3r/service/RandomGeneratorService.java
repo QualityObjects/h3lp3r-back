@@ -80,11 +80,11 @@ public class RandomGeneratorService {
 		Gender gender = input.getParams().containsKey(GENDER_INPUT_KEY) ? Gender.valueOf(input.getParams().get(GENDER_INPUT_KEY)) : null;
 
 		List<RandomName> result = nameGenerator.generateNames( total, gender ).parallelStream().map(name -> {
-			RandomName rn = new RandomName();
-			rn.setGender(name.getGender());
-			rn.setFirstName(name.getFirstName());
-			rn.setLastName(name.getLastName());
-			return rn;
+			return RandomName.builder() //
+			.gender(name.getGender()) //
+			.firstName(name.getFirstName()) //
+			.lastName(name.getLastName()) //
+			.build();
 		}).collect(Collectors.toList());
 
 		resp.setResult(result);

@@ -6,9 +6,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.qualityobjects.oss.h3lp3r.exception.QOException;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonInclude(Include.NON_NULL)
 public class ErrorBean {
 
@@ -24,18 +31,18 @@ public class ErrorBean {
 	public void setErrorData(Map<String, Object> errorData) {
 		this.errorData = errorData;
 	}
-
-	public ErrorBean() {}
 	
 	public ErrorBean(int code, String msg) {
 		this.errorCode = code;
 		this.errorMessage = msg;
 	}
 	
-	public ErrorBean(QOException ex) {
-		this.errorCode = ex.getCode();
-		this.errorMessage = ex.getMessage();
-		this.errorData = ex.getErrorData();
+	public static ErrorBean of(QOException ex) {
+		return ErrorBean.builder()
+		.errorCode(ex.getCode()) //
+		.errorMessage(ex.getMessage()) //
+		.errorData(ex.getErrorData()) //
+		.build();
 	}
 
 	

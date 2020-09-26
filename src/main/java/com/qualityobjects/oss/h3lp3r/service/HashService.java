@@ -22,11 +22,6 @@ public class HashService {
 	public static final String TEXT_INPUT_KEY = "text";
 	
 	public OpResponse hash(OpInput input) throws QOException {
-		if (true) {
-			throw new RuntimeException("Hola caracola");
-		}
-		OpResponse resp = new OpResponse();
-		resp.setInput(input);
 		
 		String textInput = input.getParams().get(TEXT_INPUT_KEY);
 		if (ObjectUtils.isEmpty(textInput)) {
@@ -34,12 +29,14 @@ public class HashService {
 		}
 		try {
 			String result = HashHelper.hash(input.getAction().getCode(), textInput);
-			resp.setResult(result);
+			return OpResponse.builder() //
+				.input(input) //
+				.result(result) //
+				.build();
 		} catch (NoSuchAlgorithmException e) {
 			throw new InvalidInputDataException(String.format("Hash algorithm not supported: %s", input.getAction().getCode()));
 		}
-		
-		return resp;
+	
 	}
 
 }

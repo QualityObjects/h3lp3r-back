@@ -26,7 +26,7 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler  {
 	@ExceptionHandler(QOException.class)
 	public ResponseEntity<ErrorBean> handleCustomException(QOException ex) {
 
-		ErrorBean error = new ErrorBean(ex);
+		ErrorBean error = ErrorBean.of(ex);
 
 		return ResponseEntity.status(ex.getHttpStatus()).body(error);
 	}

@@ -23,8 +23,6 @@ public class BaseEncodingService {
 	public static final String TEXT_INPUT_KEY = "text";
 	
 	public OpResponse base64(OpInput input) throws QOException {
-		OpResponse resp = new OpResponse();
-		resp.setInput(input);
 		
 		String textInput = input.getParams().get(TEXT_INPUT_KEY);
 		if (ObjectUtils.isEmpty(textInput)) {
@@ -39,9 +37,10 @@ public class BaseEncodingService {
 		} else {
 			throw new InvalidInputDataException(String.format("Operation not supported: '%s'", input.getAction()));
 		}
-		resp.setResult(result);
-		
-		return resp;
+		return OpResponse.builder() //
+						.input(input) // 
+						.result(result) //
+						.build();
 	}
 
 }
