@@ -8,7 +8,7 @@ services:
 
 stages:
   - prepare
-  - build_publish
+  - build_push
 
 vars:
   stage: prepare
@@ -20,7 +20,7 @@ vars:
       dotenv: vars.env
 
 build-docker-image:
-  stage: build_publish
+  stage: build_push
   before_script:
     - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
   script:
