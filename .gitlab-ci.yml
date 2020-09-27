@@ -21,8 +21,9 @@ vars:
 
 build-docker-image:
   stage: build_publish
+  before_script:
+    - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
   script:
-    - echo "Preparing image: $CI_REGISTRY_IMAGE:$VERSION"
     - docker build -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
     - docker push "$CI_REGISTRY_IMAGE:latest"
