@@ -1,5 +1,5 @@
 variables:
-  VERSION: $(python3 -c "from xml.etree.ElementTree import parse; print(parse(\'${BACK_DIR_NAME}/pom.xml\').getroot().find(\'./{*}version\').text)")
+  VERSION: $(python3 -c "from xml.etree.ElementTree import parse; print(parse(\'./pom.xml\').getroot().find(\'./{*}version\').text)")
 
 image: docker:latest
 
