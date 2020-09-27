@@ -18,7 +18,8 @@ vars:
   artifacts:
     reports:
       dotenv: vars.env
-  
+  environment:
+    VERSION: $VERSION
 
 build-docker-image:
   stage: build_publish
