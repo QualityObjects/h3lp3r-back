@@ -9,7 +9,7 @@ ENV JARFILE=h3lp3r-back.jar
 RUN mkdir -p $WORKSPACE/src
 WORKDIR "$WORKSPACE"
 
-ADD ./* $WORKSPACE/src/
+ADD ./ $WORKSPACE/src/
 
 RUN cd $WORKSPACE/src && ls -la && mvn clean package -B -DskipTests=true && mv target/*.jar $WORKSPACE/${JARFILE}
 RUN ls -la .
