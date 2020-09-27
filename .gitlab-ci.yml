@@ -11,6 +11,8 @@ stages:
   - build_push
 
 vars:
+  only:
+    - master
   stage: prepare
   script:
     - VERSION=$(docker run -v "$(pwd)/pom.xml:/pom.xml" --rm python:3.8-slim python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)")
@@ -25,9 +27,9 @@ build-docker-image:
     - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
   script:
     - docker build -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
-    - docker push "$CI_REGISTRY_IMAGE:$VERSION"
     - docker push "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$VERSION"
   only:
     - master
   dependencies: 
-    - vars
+  - vars
