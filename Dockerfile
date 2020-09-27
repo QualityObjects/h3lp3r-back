@@ -11,7 +11,7 @@ WORKDIR "$WORKSPACE"
 
 ADD ./ $WORKSPACE/src/
 
-RUN cd $WORKSPACE/src && ls -la && mvn clean package -B -DskipTests=true && mv target/*.jar $WORKSPACE/${JARFILE}
+RUN cd $WORKSPACE/src && ls -la && mvn clean package -B -DskipTests=true && ls -l1 target/*.jar && mv target/*.jar $WORKSPACE/${JARFILE}
 RUN ls -la .
 
 FROM openjdk:11.0.8-jre-slim as executor
