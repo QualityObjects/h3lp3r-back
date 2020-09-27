@@ -13,7 +13,7 @@ stages:
 vars:
   stage: prepare
   script:
-    - VERSION=$(python3 -c "from xml.etree.ElementTree import parse; print(parse('./pom.xml').getroot().find('./{*}version').text)")
+    - VERSION=$(docker run -v "$(pwd)/pom.xml:/pom.xml" --rm -it python:3.8-slim python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)")
     - echo VERSION=$VERSION
     - echo VERSION=$VERSION > vars.env
   artifacts:
