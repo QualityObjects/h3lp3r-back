@@ -1,40 +1,43 @@
-management:
-  health:
-    ldap:
-      enabled: false
-    db:
-      enabled: true
-    mail:
-      enabled: false
-    defaults:
-      enabled: true
-  endpoint:
-    health:
-      show-details: ALWAYS
-      enabled: true
-
-spring:
-  application:
-    name: H3lp3r
-  jackson:    
-    time-zone: Europe/Madrid      
-    serialization:
-      indent-output: true
-      fail-on-empty-beans: false
-      write-dates-as-timestamps: false
-    deserialization:
-      adjust-dates-to-context-time-zone: true
-  elasticsearch:
-    rest:
-      uris: ${elasticsearch-url:localhost:9200}
-
-server:
-  port: ${server-port:8080}
-  error:
-    whitelabel:
-      enabled: false 
-  
+version: '3'
 services:
-  url:
-    prefix: /api
-      
+  h3lp3r-es:
+    container_name: h3lp3r-es
+    image: elasticsearch:7.9.1
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      node.name: h3lp3r-node-1
+      cluster.name: h3lp3r-cluster
+      ES_JAVA_OPTS: -Xms750m -Xmx750m
+    volumes:
+      - "/opt/volumes/h3lp3r-es:/usr/share/elasticsearch/data"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "localhost:9200"]
+      interval: 2m
+      timeout: 5s
+      retries: 3
+  h3lp3r-front:
+    container_name: h3lp3r-front
+    image: qualityobjects/h3lp3r-front:latest
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:2080:80
+    healthcheck:
+      test: ["CMD-SHELL", "ps -ef | grep nginx | grep master"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+  h3lp3r-back:
+    container_name: h3lp3r-back
+    image: qualityobjects/h3lp3r-back:latest
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      ES_URL: h3lp3r-es:9200
+    depends_on:
+      - h3lp3r-es
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "localhost:8080/actuator"]
+      interval: 2m
+      timeout: 5s
+      retries: 3
