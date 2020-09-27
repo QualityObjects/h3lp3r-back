@@ -30,4 +30,4 @@ build-docker-image:
   only:
     - master
   dependencies: 
-  - vars
+    - vars
