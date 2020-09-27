@@ -3,23 +3,14 @@ image: docker:latest
 
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
+  - export VERSION=$(python3 -c "from xml.etree.ElementTree import parse; print(parse('./pom.xml').getroot().find('./{*}version').text)")
 
 services:
   - docker:dind
 
 stages:
-  - prepare
   - build_publish
 
-vars:
-  stage: prepare
-  script:
-    - echo VERSION=$(python3 -c "from xml.etree.ElementTree import parse; print(parse('./pom.xml').getroot().find('./{*}version').text)") > vars.env
-  artifacts:
-    reports:
-      dotenv: vars.env
-  environment:
-    VERSION: $VERSION
 
 build-docker-image:
   stage: build_publish
