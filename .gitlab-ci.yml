@@ -6,6 +6,9 @@ image: docker:latest
 before_script:
   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
 
+services:
+  docker:dind
+  
 stages:
   - build
   - publish
@@ -18,10 +21,9 @@ build-docker-image:
     - master
 
 publish-docker-image:
-  stage: build
+  stage: publish
   script:        
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
   only:
     - master
 
-    
