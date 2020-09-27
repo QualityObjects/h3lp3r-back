@@ -1,12 +1,10 @@
 version: '3'
 services:
   h3lp3r-es:
-    container_name: h3lp3r-db
+    container_name: h3lp3r-es
     image: elasticsearch:7.9.1
     restart: unless-stopped
     environment:
-      PORT: 8080
-      ES_URL: h3lp3r-es:9200
       discovery.type: single-node
       node.name: h3lp3r-node-1
       cluster.name: h3lp3r-cluster
@@ -21,7 +19,7 @@ services:
   h3lp3r-front:
     container_name: h3lp3r-front
     image: qualityobjects/h3lp3r-front:latest
-    restart: unless-stoppedgugu
+    restart: unless-stopped
     ports:
       - 127.0.0.1:1080:80
     healthcheck:
@@ -43,6 +41,3 @@ services:
       interval: 2m
       timeout: 5s
       retries: 3
-
-
-    
