@@ -1,20 +1,27 @@
 version: '3'
 services:
-  h3lp3r-db:
+  h3lp3r-es:
     container_name: h3lp3r-db
-    image: postgres:12
+    image: elasticsearch:7.9.1
     restart: unless-stopped
+    environment:
+      PORT: 8080
+      ES_URL: h3lp3r-es:9200
+      discovery.type: single-node
+      node.name: h3lp3r-node-1
+      cluster.name: h3lp3r-cluster
+      ES_JAVA_OPTS: -Xms750m -Xmx750m
     volumes:
-      - "/opt/volumes/h3lp3r-db:/var/lib/postgresql/data" 
+      - "/opt/volumes/h3lp3r-es:/usr/share/elasticsearch/data"
     healthcheck:
-      test: ["CMD", "/usr/bin/pg_isready"]
-      interval: 1m
-      timeout: 2s
-      retries: 5
+      test: ["CMD", "curl", "-sf", "localhost:9200"]
+      interval: 2m
+      timeout: 5s
+      retries: 3
   h3lp3r-front:
     container_name: h3lp3r-front
     image: qualityobjects/h3lp3r-front:latest
-    restart: unless-stopped
+    restart: unless-stoppedgugu
     ports:
       - 127.0.0.1:1080:80
     healthcheck:
@@ -28,10 +35,7 @@ services:
     restart: unless-stopped
     environment:
       PORT: 8080
-      DB_HOST: h3lp3r-db
-      DB_NAME: h3lp3r
-      DB_USER: h3lp3r
-      DB_PASSWORD: h3lp3r
+      ES_URL: h3lp3r-es:9200
     depends_on:
       - h3lp3r-db
     healthcheck:
