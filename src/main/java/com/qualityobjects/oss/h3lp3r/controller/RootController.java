@@ -26,8 +26,8 @@ public class RootController {
 	}
 
 	public static String getRealIp(HttpServletRequest request) {
-		return Optional.ofNullable(request.getHeader("X-Real-IP"))
-			.orElse(Optional.ofNullable(request.getHeader("X-Forwarded-For")).orElse(request.getRemoteAddr()));
+		return Optional.ofNullable(request.getHeader("X-Forwarded-For"))
+			.orElse(Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr()));
 	}
 	
 
