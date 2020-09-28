@@ -16,6 +16,9 @@ management:
 spring:
   application:
     name: H3lp3r
+  output:
+    ansi:
+      enabled: always
   jackson:    
     time-zone: Europe/Madrid      
     serialization:
