@@ -1,29 +1,21 @@
 package com.qualityobjects.oss.h3lp3r.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.LoggerFactory;
-import org.ajbrown.namemachine.Gender;
-import org.ajbrown.namemachine.Name;
-import org.ajbrown.namemachine.NameGenerator;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse;
 import com.qualityobjects.oss.h3lp3r.domain.dto.RandomName;
-import com.qualityobjects.oss.h3lp3r.domain.enums.Lang;
 import com.qualityobjects.oss.h3lp3r.domain.enums.Operation;
 import com.qualityobjects.oss.h3lp3r.exception.InvalidInputDataException;
 import com.qualityobjects.oss.h3lp3r.exception.QOException;
+
+import org.ajbrown.namemachine.Gender;
+import org.ajbrown.namemachine.NameGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 public class RandomGeneratorService {
