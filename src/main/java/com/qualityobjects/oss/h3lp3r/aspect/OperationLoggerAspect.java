@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.qualityobjects.oss.h3lp3r.controller.RootController;
 import com.qualityobjects.oss.h3lp3r.domain.document.OperationLog;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse;
@@ -50,7 +51,7 @@ public class OperationLoggerAspect {
             errorMsg = ex.toString();
             throw ex;
         } finally {
-            String remoteIp = Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr());
+            String remoteIp = RootController.getRealIp(request);
             Long duration = Duration.between(before, LocalDateTime.now()).toNanos();
             OperationLog op = OperationLog.builder().duration(duration) //
                                             .clientIp(remoteIp) //
