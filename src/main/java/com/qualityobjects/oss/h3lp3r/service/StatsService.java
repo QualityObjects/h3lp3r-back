@@ -1,5 +1,7 @@
 package com.qualityobjects.oss.h3lp3r.service;
 
+import java.time.LocalDateTime;
+
 import com.qualityobjects.oss.h3lp3r.repository.OperationLogRepository;
 
 import org.slf4j.Logger;
@@ -16,4 +18,7 @@ public class StatsService {
 	@SuppressWarnings("unused") 
 	private static final Logger LOG = LoggerFactory.getLogger(StatsService.class);
 
+	public Integer getLastOperations(LocalDateTime since) {
+		return null;
+	}
 }
