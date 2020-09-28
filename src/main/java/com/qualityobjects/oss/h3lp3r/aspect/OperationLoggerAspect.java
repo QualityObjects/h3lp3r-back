@@ -3,6 +3,8 @@ package com.qualityobjects.oss.h3lp3r.aspect;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 @Aspect
 @Component
@@ -47,9 +50,10 @@ public class OperationLoggerAspect {
             errorMsg = ex.toString();
             throw ex;
         } finally {
+            String remoteIp = Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr());
             Long duration = Duration.between(before, LocalDateTime.now()).toNanos();
             OperationLog op = OperationLog.builder().duration(duration) //
-                                            .clientIp(request.getRemoteAddr()) //
+                                            .clientIp(remoteIp) //
                                             .operationTimestamp(before) //
                                             .action(input.getAction()) //
                                             .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
