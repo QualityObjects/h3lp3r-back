@@ -26,8 +26,9 @@ public class RootController {
 	}
 
 	public static String getRealIp(HttpServletRequest request) {
-		return Optional.ofNullable(request.getHeader("X-Forwarded-For"))
+		String clientIp = Optional.ofNullable(request.getHeader("X-Forwarded-For"))
 			.orElse(Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr()));
+		return clientIp.contains(",") ? clientIp.substring(0, clientIp.indexOf(',')).trim() : clientIp;
 	}
 	
 
