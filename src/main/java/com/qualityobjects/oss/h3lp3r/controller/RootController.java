@@ -14,22 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "${services.url.prefix}")
 public class RootController {
 
-
-	@GetMapping(path = {"/", ""})
+	@GetMapping(path = { "/", "" })
 	public String index() throws QOException {
 		return "H3lp3r REST API server";
 	}
-	
-	@GetMapping(path = {"/ip"})
+
+	@GetMapping(path = { "/ip" })
 	public String ip(HttpServletRequest request) throws QOException {
 		return RootController.getRealIp(request);
 	}
 
 	public static String getRealIp(HttpServletRequest request) {
 		String clientIp = Optional.ofNullable(request.getHeader("X-Forwarded-For"))
-			.orElse(Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr()));
+				.orElse(Optional.ofNullable(request.getHeader("X-Real-IP")).orElse(request.getRemoteAddr()));
 		return clientIp.contains(",") ? clientIp.substring(0, clientIp.indexOf(',')).trim() : clientIp;
 	}
-	
+
 
 }
