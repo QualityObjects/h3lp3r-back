@@ -32,6 +32,7 @@ public class OperationLog {
     @Id
 	private String id;
 
+    @Field(type = FieldType.Ip)
 	private String clientIp;
 
 	@Builder.Default
