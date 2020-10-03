@@ -3,6 +3,8 @@ package com.qualityobjects.oss.h3lp3r.aspect;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +62,13 @@ public class OperationLoggerAspect {
                 op.setSuccess(false);
                 op.setErrorMsg(errorMsg);
             }
-            olRepository.save(op);
+            executor.execute(() -> {
+                olRepository.save(op);
+            });
+            
         }
     }
+
+    Executor executor = Executors.newFixedThreadPool(4);
 
 }
