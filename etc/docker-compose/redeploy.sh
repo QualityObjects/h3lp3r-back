@@ -1,5 +1,5 @@
 #Change to directory with docker-compose.yml file
-cd /root/h3lp3r
+cd ~/h3lp3r
 
 function redeploy {
 
