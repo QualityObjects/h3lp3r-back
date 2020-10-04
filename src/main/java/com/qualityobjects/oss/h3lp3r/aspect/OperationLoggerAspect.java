@@ -55,7 +55,7 @@ public class OperationLoggerAspect {
             OperationLog op = OperationLog.builder().duration(duration) //
                                             .clientIp(remoteIp) //
                                             .operationTimestamp(before) //
-                                            .action(input.getAction()) //
+                                            .operation(input.getAction()) //
                                             .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
                                             .userAgent(request.getHeader("user-agent")).build();
             if (errorMsg != null) {
