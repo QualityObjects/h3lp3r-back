@@ -19,6 +19,7 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.AvgAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -67,20 +68,8 @@ public class StatsService {
 	}
 
 	final static DateTimeFormatter ISO_DT_WITH_MILLIS_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-	/*    SearchQuery searchQuery = new NativeSearchQueryBuilder()
-            .withQuery(matchAllQuery())
-            .withSearchType(COUNT)
-            .withIndices("articles").withTypes("article")
-            .addAggregation(terms("subjects").field("subject"))
-            .build();*/
+
 	public OperationsByDateRange getAggregationsOnOperation(LocalDateTime since, DateHistogramInterval interval) throws IOException {
-//		SearchRequestBuilder srb = new SearchRequestBuilder(client, action)
-		// SearchRequest searchRequest = new SearchRequest("operation_log") //
-		// 			.searchType(SearchType.QUERY_THEN_FETCH)
-		// 			.addAggregation(null);
-		
-		
-		LOG.info("Interval: {}", interval);
 		TermsAggregationBuilder termsAgg = AggregationBuilders.terms("operations").field("operation");
 		AvgAggregationBuilder avgAgg = AggregationBuilders.avg("avg_duration").field("duration");
 		DateHistogramAggregationBuilder dhab = AggregationBuilders.dateHistogram("ops_over_time") //
@@ -89,7 +78,9 @@ public class StatsService {
 				.subAggregation(avgAgg);
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()		
 		.query(QueryBuilders.rangeQuery("operationTimestamp").from(since.format(ISO_DT_WITH_MILLIS_PATTERN)))
-		.aggregation(dhab).size(0);
+		.aggregation(dhab)
+		.aggregation(termsAgg) // Same aggregation for entire date range
+		.size(0);
 		LOG.info("searchSourceBuilder: {}", searchSourceBuilder.toString());
 		SearchRequest searchRequest = new SearchRequest().source(searchSourceBuilder);
 
@@ -99,11 +90,10 @@ public class StatsService {
 		if (searchResponse.status() != RestStatus.OK) {
 			throw new QORuntimeException("Error quering ElasticSearch");
 		}
-		
+		LOG.info("{}", searchResponse.toString());
 		Aggregations aggs = searchResponse.getAggregations();
 		
-		Histogram hist = aggs.get("ops_over_time");
-		return OperationsByDateRange.of(since, "5m", hist);
+		return OperationsByDateRange.of(since, interval.toString(), aggs);
 		// XContentBuilder builder = XContentFactory.jsonBuilder();
 		// builder.startObject();		
 		// XContentBuilder frag = hist.toXContent(builder, ToXContent.EMPTY_PARAMS);

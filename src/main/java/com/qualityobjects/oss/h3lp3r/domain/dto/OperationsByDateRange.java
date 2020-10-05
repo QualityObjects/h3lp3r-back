@@ -10,6 +10,7 @@ import java.util.stream.LongStream;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation.Bucket;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -33,7 +34,9 @@ public class OperationsByDateRange {
      */
     String interval;
 
-    List<OpsInRange> buckets;
+    List<OpsInRange> timeline;
+
+    Map<String, Long> operations;
 
     Long count;
 
@@ -49,7 +52,9 @@ public class OperationsByDateRange {
         Map<String, Long> countByOperation;
     }
 
-    public static OperationsByDateRange of(LocalDateTime since, String interval, Histogram dateRangeHistogram) {
+    public static OperationsByDateRange of(LocalDateTime since, String interval, Aggregations aggs) {
+
+        Histogram dateRangeHistogram = aggs.get("ops_over_time");
 
         List<OpsInRange> buckets = dateRangeHistogram.getBuckets().stream().map(bucket -> {
             LocalDateTime initRange = LocalDateTime.parse(bucket.getKeyAsString(), DateTimeFormatter.ISO_DATE_TIME);
@@ -64,11 +69,15 @@ public class OperationsByDateRange {
                 .build();
         }).collect(Collectors.toList());
 
+		Terms termsByoperations = aggs.get("operations");
+        Map<String, Long> countByOperation = termsByoperations.getBuckets().stream().collect(Collectors.toMap(Bucket::getKeyAsString, Bucket::getDocCount));
+        
         return OperationsByDateRange.builder() //
             .since(since) //
             .interval(interval) //
-            .buckets(buckets) //
-            .count(buckets.parallelStream().flatMapToLong(b -> LongStream.of(b.getCount())).sum())
+            .timeline(buckets) //
+            .operations(countByOperation) //
+            .count(countByOperation.values().parallelStream().mapToLong(Long::longValue).sum())
             .build();
     }
 }
