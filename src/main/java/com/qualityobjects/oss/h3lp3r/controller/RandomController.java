@@ -43,8 +43,8 @@ public class RandomController {
 
 	@GetMapping(path = {"/oracle"})
 	public OpResponse getOracleSentence( @RequestParam MultiValueMap<String, String> params) throws QOException {
-		OpInput input = new OpInput(Operation.RANDOM_NAMES, params.toSingleValueMap());
+		OpInput input = new OpInput(Operation.ORACLE_SAYS, params.toSingleValueMap());
 		
-		return randomGenService.randomNames(input);
+		return randomGenService.oracleSays(input);
 	}
 }
