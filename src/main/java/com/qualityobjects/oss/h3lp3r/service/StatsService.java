@@ -2,7 +2,6 @@ package com.qualityobjects.oss.h3lp3r.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 import com.qualityobjects.oss.h3lp3r.domain.dto.OperationsByDateRange;
@@ -18,8 +17,6 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.AvgAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -27,33 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-/*
-curl -H "Content-Type: application/json" -XPOST meetup2.qodev.es:9200/operation_log/_search?pretty=true -d '{
-  "aggs": {
-    "ops_over_time": {
-      "date_histogram": {
-        "field": "operationTimestamp",
-        "calendar_interval": "1m"
-      },
-      "aggs": {
-          "operations": {
-            "terms": {
-              "field": "action"
-            }
-          },
-          "avg_duration": {
-            "avg": {
-              "field": "duration"
-            }
-          }
-        }
-      }
-  },
-  "size": 0
-}'
 
-
- */
 @Service
 public class StatsService {
 
