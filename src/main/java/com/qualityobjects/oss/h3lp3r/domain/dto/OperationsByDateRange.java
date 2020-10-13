@@ -56,7 +56,7 @@ public class OperationsByDateRange {
         Histogram dateRangeHistogram = aggs.get("ops_over_time");
 
         List<OpsInRange> buckets = dateRangeHistogram.getBuckets().stream().map(bucket -> {
-            LocalDateTime initRange = LocalDateTime.parse(bucket.getKeyAsString(), DateTimeFormatter.ISO_DATE_TIME);
+            LocalDateTime initRange = LocalDateTime.parse(bucket.getKeyAsString(), DateTimeFormatter.ISO_DATE_TIME);            
             Terms countByOp = bucket.getAggregations().get("operations");
             Map<String, Long> countByOperation = countByOp.getBuckets().stream().collect(Collectors.toMap(Bucket::getKeyAsString, Bucket::getDocCount));
             Avg avgDur = bucket.getAggregations().get("avg_duration");

@@ -2,6 +2,7 @@ package com.qualityobjects.oss.h3lp3r.aspect;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -52,9 +53,10 @@ public class OperationLoggerAspect {
         } finally {
             String remoteIp = RootController.getRealIp(request);
             Long duration = Duration.between(before, LocalDateTime.now()).toNanos();
+            LocalDateTime opTs = before.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
             OperationLog op = OperationLog.builder().duration(duration) //
                                             .clientIp(remoteIp) //
-                                            .operationTimestamp(before) //
+                                            .operationTimestamp(opTs) //
                                             .operation(input.getAction()) //
                                             .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
                                             .userAgent(request.getHeader("user-agent")).build();

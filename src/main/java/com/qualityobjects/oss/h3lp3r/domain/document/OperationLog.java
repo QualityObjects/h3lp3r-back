@@ -46,7 +46,7 @@ public class OperationLog {
 	@Nullable
 	private String errorMsg;
 
-    @JsonFormat(shape = Shape.STRING)
+    @JsonFormat(shape = Shape.STRING, timezone = "UTC")
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
 	private LocalDateTime operationTimestamp;
 
