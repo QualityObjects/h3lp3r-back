@@ -8,6 +8,10 @@ variables:
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   LM_JAVA_VERSION: 11
   SAST_JAVA_VERSION: 11
+  JAR_FILE: h3lp3r-back.jar
+
+  services:
+    - docker:dind 
 
 stages:
   - prepare
@@ -20,8 +24,6 @@ prepare_job:
   #  - master
   stage: prepare
   image: docker:latest
-  services:
-    - docker:dind 
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
   script:
@@ -38,11 +40,15 @@ build_job:
   #  - master
   stage: build
   image: maven:3.6.3-jdk-11
+  cache:
+    paths:
+      - .m2/repository/
   script:
-    - mvn clean install
+    - mvn clean install -DskipTests=true
+    - mv target/*.jar ./$JARFILE 
   artifacts:
     paths:
-      - target/*.jar
+      - ./$JARFILE
     expire_in: 1 day   
   dependencies: 
     - prepare_job
@@ -53,13 +59,11 @@ build_docker_job:
   #  - master
   stage: build_docker
   image: docker:latest
-  services:
-    - docker:dind 
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
     - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
   script:
-    - docker build -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
+    - docker build --buildarg "JAR_FILE=$JAR_FILE" -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
     - docker push "$CI_REGISTRY_IMAGE:latest"
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
   dependencies: 
