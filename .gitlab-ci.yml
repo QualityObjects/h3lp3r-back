@@ -25,7 +25,7 @@ prepare_job:
   stage: prepare
   image: python:3.8-slim
   script:
-    - python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)"
+    - python3 -c "from xml.etree.ElementTree import parse; print(parse('./pom.xml').getroot().find('./{*}version').text)"
     - echo VERSION=$VERSION > vars.env
   artifacts:
     reports:
