@@ -43,10 +43,10 @@ build_job:
       - .m2/repository/
   script:
     - mvn clean package -B -DskipTests=true
-    - mv target/*.jar ./$JARFILE 
+    - mv target/*.jar ./$JAR_FILE 
   artifacts:
     paths:
-      - ./$JARFILE
+      - ./$JAR_FILE
     expire_in: 1 day   
   dependencies: 
     - prepare_job
