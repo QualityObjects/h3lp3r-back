@@ -1,0 +1,35 @@
+image: docker:latest
+
+before_script:
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
+
+services:
+  - docker:dind
+
+stages:
+  - prepare
+  - build_push
+
+vars:
+  only:
+    - master
+  stage: prepare
+  script:
+    - VERSION=$(docker run -v "$(pwd)/pom.xml:/pom.xml" --rm python:3.8-slim python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)")
+    - echo VERSION=$VERSION > vars.env
+  artifacts:
+    reports:
+      dotenv: vars.env
+
+build-docker-image:
+  stage: build_push
+  before_script:
+    - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
+  script:
+    - docker build -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$VERSION"
+  only:
+    - master
+  dependencies: 
+  - vars
