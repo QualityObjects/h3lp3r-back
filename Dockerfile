@@ -2,6 +2,8 @@ FROM openjdk:11.0.8-jre-slim as executor
 
 ADD target/*.jar .
 
+RUN ls 
+
 LABEL maintainer="tecnico@qualityobjects.com" \
       vendor="Quality Objects" \
       description="QO H3lp3r application"
