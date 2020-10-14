@@ -23,11 +23,9 @@ prepare_job:
   #only:
   #  - master
   stage: prepare
-  image: docker:latest
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
+  image: python:3.8-slim
   script:
-    - VERSION=$(docker run -v "$(pwd)/pom.xml:/pom.xml" --rm python:3.8-slim python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)")
+    - python3 -c "from xml.etree.ElementTree import parse; print(parse('/pom.xml').getroot().find('./{*}version').text)"
     - echo VERSION=$VERSION > vars.env
   artifacts:
     reports:
