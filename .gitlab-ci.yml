@@ -43,7 +43,7 @@ build_job:
       - target/h3lp3r-back.jar
     expire_in: 1 day   
   dependencies: 
-    - vars
+    - prepare_job
 
 # build_docker: Crea la imagen docker y la sube al registro, en este caso al DockerHUB
 build_docker_job:
@@ -61,5 +61,5 @@ build_docker_job:
     - docker push "$CI_REGISTRY_IMAGE:latest"
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
   dependencies: 
-    - vars
+    - prepare_job
     - build_job
