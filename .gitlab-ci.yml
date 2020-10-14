@@ -10,8 +10,8 @@ variables:
   SAST_JAVA_VERSION: 11
   JAR_FILE: h3lp3r-back.jar
 
-  services:
-    - docker:dind 
+services:
+  - docker:dind 
 
 stages:
   - prepare
