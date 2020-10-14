@@ -10,6 +10,8 @@ ENV ES_URL=h3lp3r-es:9200
 ENV SECRET=h3lp3r_super_secret
 ENV JARFILE=h3lp3r-back.jar
 
+RUN ls
+
 RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
 EXPOSE ${PORT}
