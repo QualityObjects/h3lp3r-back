@@ -8,7 +8,8 @@ ENV PORT=8080
 
 ENV ES_URL=h3lp3r-es:9200
 ENV SECRET=h3lp3r_super_secret
-ARG JARFILE=h3lp3r-back.jar
+ARG JAR_FILE=h3lp3r-back.jar
+ENV JARFILE=${JAR_FILE}
 
 RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
@@ -19,4 +20,4 @@ COPY ./${JARFILE} .
 RUN pwd && ls -lh
 
 ENTRYPOINT ["bash", "-c" ]
-CMD ["/usr/bin/java -jar ${JARFILE} --port=${PORT} --elasticsearch-url=${ES_URL} --secret=${SECRET}"]
+CMD ["java -jar ${JARFILE} --port=${PORT} --elasticsearch-url=${ES_URL} --secret=${SECRET}"]
