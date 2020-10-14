@@ -19,7 +19,7 @@ RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
 EXPOSE ${PORT}
 
-RUN mv ./target/*.jar h3lp3r-back.jar
+RUN mv ./*.jar h3lp3r-back.jar
 
 COPY --from=builder ${JARFILE} ./${JARFILE}
 
