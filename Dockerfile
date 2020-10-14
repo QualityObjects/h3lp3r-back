@@ -1,5 +1,7 @@
 FROM openjdk:11.0.8-jre-slim as executor
 
+ADD target/*.jar .
+
 LABEL maintainer="tecnico@qualityobjects.com" \
       vendor="Quality Objects" \
       description="QO H3lp3r application"
@@ -15,10 +17,9 @@ RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
 EXPOSE ${PORT}
 
-RUN ls
-RUN mv target/*.jar h3lp3r-back.jar
+RUN mv ./target/*.jar h3lp3r-back.jar
 
-COPY --from=builder ${JARFILE} ${JARFILE}
+COPY --from=builder ${JARFILE} ./${JARFILE}
 
 RUN pwd && ls -lh
 
