@@ -64,6 +64,7 @@ build_docker_job:
     - docker build --build-arg "JAR_FILE=$JAR_FILE" -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
     - docker push "$CI_REGISTRY_IMAGE:latest"
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
+    - rm -f /root/.docker/config.json 2> /dev/null
   dependencies: 
     - prepare_job
     - build_job
