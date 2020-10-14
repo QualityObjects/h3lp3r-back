@@ -42,7 +42,7 @@ build_job:
     paths:
       - .m2/repository/
   script:
-    - mvn clean install -DskipTests=true
+    - mvn clean package -B -DskipTests=true
     - mv target/*.jar ./$JARFILE 
   artifacts:
     paths:
@@ -61,7 +61,7 @@ build_docker_job:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY --
     - "echo Image to build and push: ${CI_REGISTRY_IMAGE}:${VERSION}"
   script:
-    - docker build --buildarg "JAR_FILE=$JAR_FILE" -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
+    - docker build --build-arg "JAR_FILE=$JAR_FILE" -t qualityobjects/h3lp3r-back:$VERSION -t qualityobjects/h3lp3r-back:latest .
     - docker push "$CI_REGISTRY_IMAGE:latest"
     - docker push "$CI_REGISTRY_IMAGE:$VERSION"
   dependencies: 
