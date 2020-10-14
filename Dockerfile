@@ -14,7 +14,7 @@ RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
 EXPOSE ${PORT}
 
-COPY --from=builder target/${JARFILE} ${JARFILE}
+COPY --from=builder /target/${JARFILE} ${JARFILE}
 
 RUN pwd && ls -lh
 

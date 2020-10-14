@@ -42,7 +42,7 @@ build_job:
     - mvn clean install
   artifacts:
     paths:
-      - target/h3lp3r-back.jar
+      - /target/h3lp3r-back.jar
     expire_in: 1 day   
   dependencies: 
     - prepare_job
