@@ -52,7 +52,15 @@ public class OperationsByDateRange {
     }
 
     public static OperationsByDateRange of(LocalDateTime since, String interval, Aggregations aggs) {
-
+        if (aggs == null) {
+            return OperationsByDateRange.builder() //
+            .since(since) //
+            .interval(interval) //
+            .timeline(List.of()) //
+            .operations(Map.of()) //
+            .count(0L)
+            .build();            
+        }
         Histogram dateRangeHistogram = aggs.get("ops_over_time");
 
         List<OpsInRange> buckets = dateRangeHistogram.getBuckets().stream().map(bucket -> {
