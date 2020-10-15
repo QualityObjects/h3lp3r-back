@@ -23,7 +23,7 @@ From your new server within a ssh session:
     vi ~/.ssh/authorized_keys 
     chmod 600 ~/.ssh/authorized_keys
     # Now (optionally) we can avoid the access using user/pass
-    vi /etc/ssh/sshd_config
+    sudo vi /etc/ssh/sshd_config
     # We set to "no" the parameter
     PasswordAuthentication no
 
