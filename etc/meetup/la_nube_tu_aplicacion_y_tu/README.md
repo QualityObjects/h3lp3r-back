@@ -54,13 +54,13 @@ Preparing nginx web server as reverse proxy with certificates for https access. 
     
     sudo vi /etc/nginx/conf.d/h3lp3r.conf # We copy the content from GitLab file
     # We should use the propoer server_name parameter according to our DNS config
-    certbot --nginx # We should select the "force redirect" option in the wizard    
+    sudo certbot --nginx # We should select the "force redirect" option in the wizard    
 
 After we got the certificate we can test it accessing from a browser to: https://meetup2.qodev.es (choose the proper server name in your case). The certificate should be loaded by the browser but an error 504 (Bad Gateway) will appear until we start our app
 
 We can enable the [HTTP/2](https://http2.github.io/) protocol which has some enhancements over the traditional HTTP1.1, editing the h3lp3r.conf file
 
-    vi /etc/nginx/conf.d/h3lp3r.conf
+    sudo vi /etc/nginx/conf.d/h3lp3r.conf
 
 Modify the line:
 
