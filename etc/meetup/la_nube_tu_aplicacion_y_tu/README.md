@@ -27,6 +27,9 @@ From your new server within a ssh session:
     # We set to "no" the parameter
     PasswordAuthentication no
 
+To apply changes
+    sudo systemctl restart sshd
+
 To verify all is working Ok, we should test the access with our new private key
 
     ssh -i ~/.ssh/myserver.key ubuntu@xxx.xxx.xxx.xxx
@@ -35,8 +38,6 @@ To verify all is working Ok, we should test the access with our new private key
 
     sudo apt update && sudo apt upgrade
     sudo apt install nginx certbot python3-certbot-nginx docker-compose
-    sudo systemctl enable docker
-    sudo systemctl start docker
 
 If we want to run our app with ubuntu user we need to add it to the docker group    
 
