@@ -35,6 +35,8 @@ To verify all is working Ok, we should test the access with our new private key
 
     sudo apt update && sudo apt upgrade
     sudo apt install nginx certbot python3-certbot-nginx docker-compose
+    sudo systemctl enable docker
+    sudo systemctl start docker
 
 If we want to run our app with ubuntu user we need to add it to the docker group    
 
