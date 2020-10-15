@@ -70,6 +70,10 @@ With:
 
     listen 443 ssl http2; # managed by Certbot
 
+To apply changes:
+
+    sudo systemctl restart nginx
+
 We can check that the application resources are gzipped and served with the HTTP/2 protocol with Chrome DevTools Network console.
 
 We should config an script to renew the SSL certificate automatically, we can use the crontab command:
