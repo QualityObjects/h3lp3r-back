@@ -36,8 +36,3 @@ services:
       ES_URL: h3lp3r-es:9200
     depends_on:
       - h3lp3r-es
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "localhost:8080/actuator"]
-      interval: 2m
-      timeout: 5s
-      retries: 3
