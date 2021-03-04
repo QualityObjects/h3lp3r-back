@@ -7,6 +7,6 @@ ${AnsiColor.BRIGHT_RED} _/    _/  _/_/_/    _/_/_/_/  _/        _/_/_/    _/    
                                                                
 ${AnsiColor.YELLOW}///////////////////////////////////////////////////////////////
 ${AnsiColor.BRIGHT_MAGENTA}===============================================================
-${AnsiColor.BRIGHT_MAGENTA}||             Quality Objects S.L. (c) 2020                 ||
+${AnsiColor.BRIGHT_MAGENTA}||             Quality Objects S.L. (c) 2021                 ||
 ${AnsiColor.BRIGHT_MAGENTA}===============================================================
 

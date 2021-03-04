@@ -52,7 +52,7 @@ public class StatsService {
 		.aggregation(dhab)
 		.aggregation(termsAgg) // Same aggregation for entire date range
 		.size(0);
-		LOG.info("searchSourceBuilder: {}", searchSourceBuilder.toString());
+		//LOG.info("searchSourceBuilder: {}", searchSourceBuilder.toString());
 		SearchRequest searchRequest = new SearchRequest().source(searchSourceBuilder);
 
 
@@ -61,7 +61,7 @@ public class StatsService {
 		if (searchResponse.status() != RestStatus.OK) {
 			throw new QORuntimeException("Error quering ElasticSearch");
 		}
-		LOG.info("{}", searchResponse.toString());
+		//LOG.info("{}", searchResponse.toString());
 		Aggregations aggs = searchResponse.getAggregations();
 		
 		return OperationsByDateRange.of(since, interval.toString(), aggs);
