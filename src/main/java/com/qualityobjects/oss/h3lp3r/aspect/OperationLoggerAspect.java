@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import com.qualityobjects.oss.h3lp3r.controller.RootController;
@@ -18,22 +16,18 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import reactor.util.context.ContextView;
 
 @Aspect
 @Component
+@Slf4j
 public class OperationLoggerAspect {
-
-    @SuppressWarnings("unused")
-	private static final Logger LOG = LoggerFactory.getLogger(OperationLoggerAspect.class);
 
     @Autowired
     OperationLogRepository olRepository;
@@ -50,10 +44,8 @@ public class OperationLoggerAspect {
         return Mono.deferContextual(ctx -> {
             ServerHttpRequest req = ctx.get(ServerHttpRequest.class);
             return r.doOnSuccess(ok -> {
-//                System.out.println("req on success: " + req);
                 logOperation(input, req);
             }).doOnError(ex -> {
-//                System.out.println("req on error: " + ex);
                 logOperation(input, req, ex.toString());
             });
         });
@@ -64,6 +56,7 @@ public class OperationLoggerAspect {
     }
 
     private void logOperation(OpInput input, ServerHttpRequest request, @Nullable String errorMessage) {
+//        log.info("Logging operation: {}", input.getAction());
         LocalDateTime before = LocalDateTime.now();
         String remoteIp = RootController.getRealIp(request);
         String userAgent = request.getHeaders().getFirst("user-agent");
@@ -73,13 +66,16 @@ public class OperationLoggerAspect {
                                         .clientIp(remoteIp) //
                                         .operationTimestamp(opTs) //
                                         .operation(input.getAction()) //
-                                        .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
+                                        .params(input.getParams().entrySet().stream().map(entry -> Map.entry(entry.getKey(), entry.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
                                         .userAgent(userAgent).build();
         if (errorMessage != null) {
             op.setSuccess(false);
             op.setErrorMsg(errorMessage);
         }
-        olRepository.save(op);
+        olRepository.save(op)
+        .doOnError(ex -> {
+            log.error("Error saving ES operation: " + ex);
+        }).subscribe();
 
     }
 
