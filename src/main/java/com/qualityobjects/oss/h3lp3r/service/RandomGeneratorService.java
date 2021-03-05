@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import reactor.core.publisher.Mono;
+
 @Service
 public class RandomGeneratorService {
 
@@ -38,23 +40,26 @@ public class RandomGeneratorService {
 	
 	private NameGenerator nameGenerator = new NameGenerator();
 
-	public OpResponse randomNumber(OpInput input) throws QOException {
-		OpResponse resp = new OpResponse();
-		resp.setInput(input);
+	public Mono<OpResponse> randomNumber(OpInput input) throws QOException {
 		
 		String minValueStr = input.getParams().get(MIN_LIMIT_INPUT_KEY);
 		String maxValueStr = input.getParams().get(MAX_LIMIT_INPUT_KEY);
 		double min = ObjectUtils.isEmpty(minValueStr) ? 0.0 : Double.valueOf(minValueStr);
 		double max = ObjectUtils.isEmpty(maxValueStr) ? min + 1.0 : Double.valueOf(maxValueStr);
 
-		if (input.getAction() == Operation.RANDOM_NUM_INT) {
-			resp.setResult(randomNumberInt(min, max));
-		} else if (input.getAction() == Operation.RANDOM_NUM_DEC) {
-			resp.setResult(randomNumberDec(min, max));
-		} else {
-			throw new InvalidInputDataException(String.format("Operation not supported: '%s'", input.getAction()));
-		}
-		return resp;
+		return Mono.fromCallable(() -> {
+			OpResponse resp = new OpResponse();
+			resp.setInput(input);
+	
+			if (input.getAction() == Operation.RANDOM_NUM_INT) {
+				resp.setResult(randomNumberInt(min, max));
+			} else if (input.getAction() == Operation.RANDOM_NUM_DEC) {
+				resp.setResult(randomNumberDec(min, max));
+			} else {
+				throw new InvalidInputDataException(String.format("Operation not supported: '%s'", input.getAction()));
+			}
+			return resp;
+		});
 	}
 	
 	public long randomNumberInt(double min, double  max) throws NumberFormatException {
@@ -67,29 +72,33 @@ public class RandomGeneratorService {
 	    return result;
 	}
 
-	public OpResponse randomNames(OpInput input) throws QOException {
-		OpResponse resp = new OpResponse();
-		resp.setInput(input);
+	public Mono<OpResponse> randomNames(OpInput input) throws QOException {
 		
 		int total = Integer.valueOf( input.getParams().getOrDefault(TOTAL_INPUT_KEY, "1"));
 		if (total > MAX_TOTAL_NAMES) {
 			total = MAX_TOTAL_NAMES;
 		}
+		final int totalNames = total;
 		Gender gender = input.getParams().containsKey(GENDER_INPUT_KEY) ? Gender.valueOf(input.getParams().get(GENDER_INPUT_KEY)) : null;
 
-		List<RandomName> result = nameGenerator.generateNames( total, gender ).parallelStream().map(name -> {
-			return RandomName.builder() //
-			.gender(name.getGender()) //
-			.firstName(name.getFirstName()) //
-			.lastName(name.getLastName()) //
-			.build();
-		}).collect(Collectors.toList());
+		return Mono.fromCallable(() -> {
+			OpResponse resp = new OpResponse();
+			resp.setInput(input);
+	
+			List<RandomName> result = nameGenerator.generateNames( totalNames, gender ).parallelStream().map(name -> {
+				return RandomName.builder() //
+				.gender(name.getGender()) //
+				.firstName(name.getFirstName()) //
+				.lastName(name.getLastName()) //
+				.build();
+			}).collect(Collectors.toList());
 
-		resp.setResult(result);
-		return resp;
+			resp.setResult(result);
+			return resp;
+		});
 	}
 
-	public OpResponse oracleSays(OpInput input) throws QOException {
+	public Mono<OpResponse> oracleSays(OpInput input) throws QOException {
 		OpResponse resp = new OpResponse();
 
 		String question = input.getParams().get(ORACLE_QUESTION_KEY);
@@ -97,27 +106,30 @@ public class RandomGeneratorService {
 		resp.setInput(input);
 
 		OracleType oracleType = OracleType.valueOf(input.getParams().getOrDefault(ORACLE_TYPE_KEY, OracleType.YES_NO.name()));
-		OracleResponse result;
 
-		double number;
-		if (input.getAction() == Operation.ORACLE_SAYS) {
-			number = randomNumberDec(0.0, 3.0);	
-		} else { // input.getAction() == Operation.ORACLE_ANSWERS
-			String normalizedQuestion = this.normalizeQuestion(question);
-			number = ((Math.abs(normalizedQuestion.hashCode()) % 1000.0) / 1000.0) * 3.0;
-		}
-		switch (oracleType) {
-			case YES_NO:
-			result = number > 1.5 ? OracleResponse.NO : OracleResponse.YES;
-			break;
-			case YES_NO_MAYBE:
-			result = number >= 2.0 ? OracleResponse.NO : (number < 1.0 ? OracleResponse.YES : OracleResponse.MAYBE);				
-			break;			
-			default:
-				throw new InvalidInputDataException("Operation not supported: " + oracleType.name());
-		}
-		resp.setResult(result);
-		return resp;
+		return Mono.fromCallable(() -> {
+			OracleResponse result;
+
+			double number;
+			if (input.getAction() == Operation.ORACLE_SAYS) {
+				number = randomNumberDec(0.0, 3.0);	
+			} else { // input.getAction() == Operation.ORACLE_ANSWERS
+				String normalizedQuestion = this.normalizeQuestion(question);
+				number = ((Math.abs(normalizedQuestion.hashCode()) % 1000.0) / 1000.0) * 3.0;
+			}
+			switch (oracleType) {
+				case YES_NO:
+				result = number > 1.5 ? OracleResponse.NO : OracleResponse.YES;
+				break;
+				case YES_NO_MAYBE:
+				result = number >= 2.0 ? OracleResponse.NO : (number < 1.0 ? OracleResponse.YES : OracleResponse.MAYBE);				
+				break;			
+				default:
+					throw new InvalidInputDataException("Operation not supported: " + oracleType.name());
+			}
+			resp.setResult(result);
+			return resp;
+		});
 	}
 
 	private String normalizeQuestion(String question) {

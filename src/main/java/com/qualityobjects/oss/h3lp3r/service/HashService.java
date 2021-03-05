@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import reactor.core.publisher.Mono;
+
 import com.qualityobjects.oss.h3lp3r.common.HashHelper;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse;
@@ -21,22 +23,24 @@ public class HashService {
 
 	public static final String TEXT_INPUT_KEY = "text";
 	
-	public OpResponse hash(OpInput input) throws QOException {
+	public Mono<OpResponse> hash(OpInput input) throws QOException {
 		
 		String textInput = input.getParams().get(TEXT_INPUT_KEY);
 		if (ObjectUtils.isEmpty(textInput)) {
 			throw new InvalidInputDataException(String.format("Input param '%s' is mandatory", TEXT_INPUT_KEY));
 		}
-		try {
-			String result = HashHelper.hash(input.getAction().getCode(), textInput);
-			return OpResponse.builder() //
-				.input(input) //
-				.result(result) //
-				.build();
-		} catch (NoSuchAlgorithmException e) {
-			throw new InvalidInputDataException(String.format("Hash algorithm not supported: %s", input.getAction().getCode()));
-		}
-	
+		return Mono.fromCallable(() -> {
+			try {
+				//if (true) throw new NoSuchAlgorithmException();
+				String result = HashHelper.hash(input.getAction().getCode(), textInput);
+				return OpResponse.builder() //
+					.input(input) //
+					.result(result) //
+					.build();
+			} catch (NoSuchAlgorithmException e) {
+				throw new InvalidInputDataException(String.format("Hash algorithm not supported: %s", input.getAction().getCode()));
+			}
+		});	
 	}
 
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Mono;
+
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse;
 import com.qualityobjects.oss.h3lp3r.domain.enums.Operation;
@@ -27,7 +29,7 @@ public class BaseEncodingController {
 	
 
 	@GetMapping(path = {"/64/{action}"})
-	public OpResponse getRandomNames(@PathVariable("action") String action, @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getRandomNames(@PathVariable("action") String action, @RequestParam MultiValueMap<String, String> params) throws QOException {
 		Operation op;
 		if (ACTION_ENCODE.equals(action) ) {
 			op = Operation.ENC_BASE64;

@@ -8,8 +8,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.qualityobjects.oss.h3lp3r.controller.RootController;
 import com.qualityobjects.oss.h3lp3r.domain.document.OperationLog;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
@@ -23,7 +21,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
 
 @Aspect
 @Component
@@ -35,42 +38,49 @@ public class OperationLoggerAspect {
     @Autowired
     OperationLogRepository olRepository;
 
-    private @Autowired HttpServletRequest request;
-
-    @Pointcut("execution(public com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse com.qualityobjects.oss.h3lp3r.service.*.*(..)) && args(input)")
+    @Pointcut("execution(public reactor.core.publisher.Mono<com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse> com.qualityobjects.oss.h3lp3r.service.*.*(..)) && args(input)")
     public void operations(OpInput input) {
     }
 
     @Around("operations(input)")
-    public OpResponse aroundOperation(ProceedingJoinPoint pjp, OpInput input) throws Throwable {
-        LocalDateTime before = LocalDateTime.now();
-        String errorMsg = null;
-        try {
-            return (OpResponse)pjp.proceed();
-        } catch (Exception | Error ex) {
-            errorMsg = ex.toString();
-            throw ex;
-        } finally {
-            String remoteIp = RootController.getRealIp(request);
-            Long duration = Duration.between(before, LocalDateTime.now()).toNanos();
-            LocalDateTime opTs = before.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
-            OperationLog op = OperationLog.builder().duration(duration) //
-                                            .clientIp(remoteIp) //
-                                            .operationTimestamp(opTs) //
-                                            .operation(input.getAction()) //
-                                            .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
-                                            .userAgent(request.getHeader("user-agent")).build();
-            if (errorMsg != null) {
-                op.setSuccess(false);
-                op.setErrorMsg(errorMsg);
-            }
-            executor.execute(() -> {
-                olRepository.save(op);
+    @SuppressWarnings("unchecked")
+    public Mono<OpResponse> aroundOperation(ProceedingJoinPoint pjp, OpInput input) throws Throwable {
+        final Mono<OpResponse> r = Mono.class.cast(pjp.proceed());
+
+        return Mono.deferContextual(ctx -> {
+            ServerHttpRequest req = ctx.get(ServerHttpRequest.class);
+            return r.doOnSuccess(ok -> {
+//                System.out.println("req on success: " + req);
+                logOperation(input, req);
+            }).doOnError(ex -> {
+//                System.out.println("req on error: " + ex);
+                logOperation(input, req, ex.toString());
             });
-            
-        }
+        });
     }
 
-    Executor executor = Executors.newFixedThreadPool(4);
+    private void logOperation(OpInput input, ServerHttpRequest request) {
+        logOperation(input, request, null);
+    }
+
+    private void logOperation(OpInput input, ServerHttpRequest request, @Nullable String errorMessage) {
+        LocalDateTime before = LocalDateTime.now();
+        String remoteIp = RootController.getRealIp(request);
+        String userAgent = request.getHeaders().getFirst("user-agent");
+        Long duration = Duration.between(before, LocalDateTime.now()).toNanos();
+        LocalDateTime opTs = before.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        OperationLog op = OperationLog.builder().duration(duration) //
+                                        .clientIp(remoteIp) //
+                                        .operationTimestamp(opTs) //
+                                        .operation(input.getAction()) //
+                                        .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
+                                        .userAgent(userAgent).build();
+        if (errorMessage != null) {
+            op.setSuccess(false);
+            op.setErrorMsg(errorMessage);
+        }
+        olRepository.save(op);
+
+    }
 
 }

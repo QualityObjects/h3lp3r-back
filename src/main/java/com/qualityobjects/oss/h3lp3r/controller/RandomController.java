@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Mono;
+
 @RestController
 @RequestMapping(path = "${services.url.prefix}/random")
 public class RandomController {
@@ -21,28 +23,28 @@ public class RandomController {
 	private RandomGeneratorService randomGenService;
 	
 	@GetMapping(path = {"/number/decimal"})
-	public OpResponse getRandomDec( @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getRandomDec( @RequestParam MultiValueMap<String, String> params) throws QOException {
 		OpInput input = new OpInput(Operation.RANDOM_NUM_DEC, params.toSingleValueMap());
 		
 		return randomGenService.randomNumber(input);
 	}
 
 	@GetMapping(path = {"/number/int"})
-	public OpResponse getRandomInt( @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getRandomInt( @RequestParam MultiValueMap<String, String> params) throws QOException {
 		OpInput input = new OpInput(Operation.RANDOM_NUM_INT, params.toSingleValueMap());
 		
 		return randomGenService.randomNumber(input);
 	}
 
 	@GetMapping(path = {"/names"})
-	public OpResponse getRandomNames( @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getRandomNames( @RequestParam MultiValueMap<String, String> params) throws QOException {
 		OpInput input = new OpInput(Operation.RANDOM_NAMES, params.toSingleValueMap());
 		
 		return randomGenService.randomNames(input);
 	}
 
 	@GetMapping(path = {"/oracle"})
-	public OpResponse getOracleSentence( @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getOracleSentence( @RequestParam MultiValueMap<String, String> params) throws QOException {
 		OpInput input = new OpInput(Operation.ORACLE_SAYS, params.toSingleValueMap());
 		
 		return randomGenService.oracleSays(input);

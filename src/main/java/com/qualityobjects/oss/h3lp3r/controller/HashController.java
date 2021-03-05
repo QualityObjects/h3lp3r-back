@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reactor.core.publisher.Mono;
+
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpInput;
 import com.qualityobjects.oss.h3lp3r.domain.dto.OpResponse;
 import com.qualityobjects.oss.h3lp3r.domain.enums.Operation;
@@ -28,7 +30,7 @@ public class HashController {
 	}
 
 	@GetMapping(path = {"/{operation}"})
-	public OpResponse getHash(@PathVariable("operation") Operation op, @RequestParam MultiValueMap<String, String> params) throws QOException {
+	public Mono<OpResponse> getHash(@PathVariable("operation") Operation op, @RequestParam MultiValueMap<String, String> params) throws QOException {
 		if (op == null) {
 			throw new InvalidInputDataException(String.format("Hash algorithm not supported"));
 		}

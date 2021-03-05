@@ -23,6 +23,7 @@ public enum Operation {
 	
 	@JsonCreator
 	public static Operation of(String name) {
+		
 		Optional<Operation> val = Arrays.stream(values()).filter(wdt -> wdt.name().equalsIgnoreCase(name)).findAny();
 		return val.isEmpty() ? null : val.get();
 	}
@@ -33,5 +34,5 @@ public enum Operation {
 			return Operation.of(source);
 		}
 	};
-	
+
 }

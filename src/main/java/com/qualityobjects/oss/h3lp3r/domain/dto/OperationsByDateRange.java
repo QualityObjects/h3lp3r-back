@@ -51,18 +51,8 @@ public class OperationsByDateRange {
         Map<String, Long> countByOperation;
     }
 
-    public static OperationsByDateRange of(LocalDateTime since, String interval, Aggregations aggs) {
-        if (aggs == null) {
-            return OperationsByDateRange.builder() //
-            .since(since) //
-            .interval(interval) //
-            .timeline(List.of()) //
-            .operations(Map.of()) //
-            .count(0L)
-            .build();            
-        }
-        Histogram dateRangeHistogram = aggs.get("ops_over_time");
-
+    public static OperationsByDateRange of(LocalDateTime since, String interval, Histogram dateRangeHistogram, Terms termsByoperations) {
+        
         List<OpsInRange> buckets = dateRangeHistogram.getBuckets().stream().map(bucket -> {
             LocalDateTime initRange = LocalDateTime.parse(bucket.getKeyAsString(), DateTimeFormatter.ISO_DATE_TIME);            
             Terms countByOp = bucket.getAggregations().get("operations");
@@ -75,8 +65,7 @@ public class OperationsByDateRange {
                 .avgDuration(avgDurationMs) //
                 .build();
         }).collect(Collectors.toList());
-
-		Terms termsByoperations = aggs.get("operations");
+		
         Map<String, Long> countByOperation = termsByoperations.getBuckets().stream().collect(Collectors.toMap(Bucket::getKeyAsString, Bucket::getDocCount));
         
         return OperationsByDateRange.builder() //

@@ -12,11 +12,12 @@ import com.qualityobjects.oss.h3lp3r.service.StatsService;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "${services.url.prefix}/stats")
@@ -31,7 +32,7 @@ public class StatsController {
 	}
 
 	@GetMapping(path = { "/since_date" })
-	public OperationsByDateRange sinceDate(@RequestParam(name = "since", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since, 
+	public Mono<OperationsByDateRange> sinceDate(@RequestParam(name = "since", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since, 
 			@RequestParam(name = "interval", defaultValue = "10m") String interval) throws QOException, IOException {
 		if (since == null) {
 			since = LocalDateTime.now().minusHours(24);
