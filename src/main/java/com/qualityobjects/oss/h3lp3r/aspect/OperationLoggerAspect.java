@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import com.qualityobjects.oss.h3lp3r.controller.RootController;
@@ -72,11 +74,17 @@ public class OperationLoggerAspect {
             op.setSuccess(false);
             op.setErrorMsg(errorMessage);
         }
-        olRepository.save(op)
-        .doOnError(ex -> {
-            log.error("Error saving ES operation: " + ex);
-        }).subscribe();
-
+        
+        executor.execute(() -> {
+            olRepository.save(op)
+            .doOnError(ex -> {
+                log.error("Error saving ES operation: " + ex);
+            }).block();
+        });
+        
     }
 
+
+    
+    Executor executor = Executors.newFixedThreadPool(8);
 }
