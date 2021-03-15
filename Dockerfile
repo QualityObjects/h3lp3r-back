@@ -20,4 +20,4 @@ COPY ./${APP_JARFILE} .
 RUN pwd && ls -lh
 
 ENTRYPOINT ["bash", "-c" ]
-CMD ["java -jar ${APP_JARFILE} --port=${PORT} --elasticsearch-host=${ES_URL} --secret=${SECRET}"]
+CMD ["java -jar ${APP_JARFILE} "]
