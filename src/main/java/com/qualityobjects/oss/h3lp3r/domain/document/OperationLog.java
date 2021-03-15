@@ -14,6 +14,8 @@ import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.GeoPointField;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.lang.Nullable;
 
 import lombok.AccessLevel;
@@ -32,7 +34,11 @@ public class OperationLog {
     @Id
 	private String id;
 
+    @Field(type = FieldType.Ip)
 	private String clientIp;
+
+	@GeoPointField
+	private GeoPoint location;
 
 	@Builder.Default
 	private Boolean success = true;
@@ -40,12 +46,12 @@ public class OperationLog {
 	@Nullable
 	private String errorMsg;
 
-    @JsonFormat(shape = Shape.STRING)
+    @JsonFormat(shape = Shape.STRING, timezone = "UTC")
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
 	private LocalDateTime operationTimestamp;
 
 	@Field(type = FieldType.Keyword)
-    private Operation action;
+    private Operation operation;
 	
 	/**
 	 * Operation duration in nanoseconds

@@ -16,6 +16,9 @@ management:
 spring:
   application:
     name: H3lp3r
+  output:
+    ansi:
+      enabled: always
   jackson:    
     time-zone: Europe/Madrid      
     serialization:
@@ -26,7 +29,7 @@ spring:
       adjust-dates-to-context-time-zone: true
   elasticsearch:
     rest:
-      uris: ${elasticsearch-host:localhost:9200}
+      uris: ${elasticsearch-url:localhost:9200}
 
 server:
   port: ${server-port:8080}

@@ -1,0 +1,1 @@
+docker run -it --rm --name gitlab-runner-register -v /opt/volumes/gitlab-runner/config:/etc/gitlab-runner:Z gitlab/gitlab-runner:alpine register

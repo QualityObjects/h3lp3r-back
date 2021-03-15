@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 public class HashHelper {
 	
+    @SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(HashHelper.class);
 
 	/**

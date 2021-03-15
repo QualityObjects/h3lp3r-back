@@ -1,4 +1,3 @@
-docker build -t h3lp3r-web-tmp -t qualityobjects/h3lp3r-web-tmp --rm -f ./Dockerfile .
 docker push qualityobjects/h3lp3r-web-tmp:latest
 
 
