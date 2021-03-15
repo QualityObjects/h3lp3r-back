@@ -68,7 +68,7 @@ public class OperationLoggerAspect {
                                         .clientIp(remoteIp) //
                                         .operationTimestamp(opTs) //
                                         .operation(input.getAction()) //
-                                        .params(input.getParams().entrySet().stream().map(entry -> Map.entry(entry.getKey(), entry.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
+                                        .params(input.getParams().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))) //
                                         .userAgent(userAgent).build();
         if (errorMessage != null) {
             op.setSuccess(false);
