@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.qualityobjects.oss</groupId>
-	<artifactId>h3lp3r-back</artifactId>
+	<artifactId>h3lper-back</artifactId>
 	<version>1.2.1</version>
-	<name>h3lp3r-back</name>
+	<name>h3lper-back</name>
 	<description>QO H3lp3r</description>
 	<packaging>jar</packaging>
 
