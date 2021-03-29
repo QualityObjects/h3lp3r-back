@@ -16,6 +16,7 @@ import com.qualityobjects.oss.h3lp3r.exception.QOException;
 
 import org.ajbrown.namemachine.Gender;
 import org.ajbrown.namemachine.NameGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,8 @@ public class RandomGeneratorService {
 		OpResponse resp = new OpResponse();
 
 		String question = input.getParams().get(ORACLE_QUESTION_KEY);
-		input.setAction(question == null ? Operation.ORACLE_SAYS : Operation.ORACLE_RESPONSE);
+		
+		input.setAction( StringUtils.isEmpty(question) ? Operation.ORACLE_SAYS : Operation.ORACLE_RESPONSE);
 		resp.setInput(input);
 
 		OracleType oracleType = OracleType.valueOf(input.getParams().getOrDefault(ORACLE_TYPE_KEY, OracleType.YES_NO.name()));
@@ -104,7 +106,8 @@ public class RandomGeneratorService {
 			number = randomNumberDec(0.0, 3.0);	
 		} else { // input.getAction() == Operation.ORACLE_ANSWERS
 			String normalizedQuestion = this.normalizeQuestion(question);
-			number = ((Math.abs(normalizedQuestion.hashCode()) % 1000.0) / 1000.0) * 3.0;
+			long seed = normalizedQuestion.hashCode();
+			number = ((Math.abs(seed) % 1000.0) / 1000.0) * 3.0;
 		}
 		switch (oracleType) {
 			case YES_NO:
@@ -121,6 +124,7 @@ public class RandomGeneratorService {
 	}
 
 	private String normalizeQuestion(String question) {
+		assert question != null;
 		return question.replaceAll("[-:;_ \\(\\)\\[\\],.\t\n]", "").toLowerCase();
 	}
 

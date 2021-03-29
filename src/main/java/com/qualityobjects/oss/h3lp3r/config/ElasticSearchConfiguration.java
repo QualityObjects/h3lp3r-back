@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.qualityobjects.oss.h3lp3r.repository.OperationLogRepository;
 
+import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,7 @@ public class ElasticSearchConfiguration  extends AbstractElasticsearchConfigurat
     private String[] urls;
 
     @Override
-    @Bean
+    @Bean(destroyMethod = "close")
     public RestHighLevelClient elasticsearchClient() {
         System.out.println(List.of(urls));
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()  

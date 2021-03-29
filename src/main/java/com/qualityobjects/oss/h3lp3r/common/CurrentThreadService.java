@@ -8,28 +8,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class CurrentThreadService {
 
-	private ThreadLocal<Map<String, Object>> threadData = new ThreadLocal<>() {
-	    @Override protected Map<String, Object> initialValue() {
-	        return new HashMap<>();
-	    }
-	};
-	
-	private Map<String, Object> getThreadData() {
-		return this.threadData.get();
-	}
+    private final InheritableThreadLocal<Map<String, Object>> threadData = new InheritableThreadLocal<>();
 
-	public <T> T get(String key, Class<T> klass) {
-		return klass.cast(getThreadData().get(key));
-	}
+    public Map<String, Object> getData() {
+        Map<String, Object> data = this.threadData.get();
+        if (data == null) {
+            data = new HashMap<>();
+            this.threadData.set(data);
+        }
+        return data;
+    }
 
-	public Object get(String key) {
-		return getThreadData().get(key);
-	}
+    public void clean() {
+        this.threadData.remove();
+    }
+
+    public <T> T get(String key, Class<T> klass) {
+        return klass.cast(getData().get(key));
+    }
+
+    public Object get(String key) {
+        return getData().get(key);
+    }
 
 
-	public void set(String key, Object value) {
-		getThreadData().put(key, value);
-	}
+    public void set(String key, Object value) {
+        getData().put(key, value);
+    }
+
 
 
 }
