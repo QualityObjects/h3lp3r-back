@@ -29,10 +29,10 @@ public class ElasticSearchConfiguration  extends AbstractElasticsearchConfigurat
     @Bean(destroyMethod = "close")
     public RestHighLevelClient elasticsearchClient() {
             
-        HttpHost[] hosts = (HttpHost[])Arrays.stream(urls).map(url -> {
+        HttpHost[] hosts = Arrays.stream(urls).map(url -> {
             var node = ElasticSearchNode.of(url);
             return new HttpHost(node.host, node.port);
-        }).toArray();
+        }).toArray(HttpHost[]::new);
         return  new RestHighLevelClient(RestClient.builder(hosts));
     }
 
