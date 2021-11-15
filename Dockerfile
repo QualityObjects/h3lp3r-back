@@ -9,7 +9,7 @@ ENV ES_URL=h3lp3r-es:9200
 ENV SECRET=h3lp3r_super_secret
 
 ARG JAR_FILE=h3lp3r-back.jar
-ENV APP_JARFILE=${JAR_FILE}
+ENV APP_JARFILE=${JARFILE}
 
 RUN mkdir /opt/h3lp3r
 WORKDIR /opt/h3lp3r
