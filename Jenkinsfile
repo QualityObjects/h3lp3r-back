@@ -147,7 +147,7 @@ pipeline {
                                 docker.withRegistry('https://docker-registry.qodev.es', 'docker-registry.qodev.es') {
                                     appImage.push('${APP_VERSION}')
                                     appImage.push("latest")
-                                    appImage.push("release")
+                                    appImage.push("candidate")
                                 }
                             }
                         }
