@@ -145,7 +145,7 @@ pipeline {
                                 def buildArgs = "--build-arg JARFILE=${jarfile} --label \"branch=${BUILD_BRANCH}\" --label \"version=${APP_VERSION}\" --label \"commit=${commit}\" --label \"maintainer=Jarvis team <jarvis_team@qualityobjects.com>\" ."
                                 def appImage = docker.build("${DOCKER_IMAGE_URL}:latest", buildArgs)
                                 docker.withRegistry('https://docker-registry.qodev.es', 'docker-registry.qodev.es') {
-                                    appImage.push('${APP_VERSION}')
+                                    appImage.push("${env.APP_VERSION}")
                                     appImage.push("latest")
                                     appImage.push("candidate")
                                 }
