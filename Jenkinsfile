@@ -21,7 +21,7 @@ pipeline {
     }
     parameters {
         string(name: 'REPO_URL', defaultValue: 'git@github.com:QualityObjects/h3lp3r-back.git', description: 'URL del repositorio')
-        string(name: 'BUILD_BRANCH', defaultValue: 'dev', description: 'Rama a construir')
+        string(name: 'BUILD_BRANCH', defaultValue: 'master', description: 'Rama a construir')
         booleanParam(name: 'BUILD_BACK', defaultValue: true, description: 'Construye el back')
         choice(name: 'BACK_TESTS', choices: ['only_unit', 'unit_and_sonar', 'unit_and_sonar_strict_tests', 'no_tests'], description: 'Tests a ejecutar')
         choice(name: 'DEPLOY_NAMESPACE', choices: ['h3lp3r'], description: 'Namespace a desplegar')
