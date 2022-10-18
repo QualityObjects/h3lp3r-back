@@ -62,6 +62,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('Test') {
             when {
                 expression {
@@ -101,7 +102,8 @@ pipeline {
                 }
             }
         }
-
+*/
+        ///////////////////////////////////////////////
         stage('Build') {
             when {
                 environment name: 'BUILD_BACK', value: 'true'
